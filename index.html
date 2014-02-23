@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<style>
+
+
+
+circle {
+  fill-opacity: .25;
+  stroke-width: 0px;
+}
+
+text {
+	font-family:"微软雅黑", "Microsoft YaHei UI", "宋体", "Arial narrow"  ;
+}
+
+#demo { font-size:22px;padding:10px 0 0 50px;color:white;width:120px;font-family:"微软雅黑", "Microsoft YaHei UI", "宋体", "Arial narrow"  ;}
+#logo { font-size:16px;padding:10px 0 0 570px;color:white;width:350px;font-family:"微软雅黑", "Microsoft YaHei UI", "宋体", "Arial narrow"  ;}
+
+h3,p,ul { font-family:"微软雅黑", "Microsoft YaHei UI", "宋体", "Arial narrow";}
+
+.time span{ padding-right:34px}
+
+.progress { width:910px; padding-left:30px}
+
+
+</style>
+<title>总理答记者问实时评论图</title>
+<body>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+  <div style="padding-top:10px">
+	<span id="demo">Demo | 网友评论时间序列图</span>
+    <span id="logo">Data&Art | 北京灵动数艺信息技术有限公司</span>
+  </div>       
+  </div>
+</div>
+<div class="container-fluid">
+    
+    <div class="row-fluid">
+		<div class="span2">
+		</div>
+		<div class="span6">
+		</div>
+		<div class="span4" style="padding-left:-50px">
+         <h3 ><span class="text-info">李克强总理答中外记者问</span></h3>
+         <ul class="list-unstyled">
+         	<li><strong>时间:</strong>3月17日（星期日）10:30  </li>
+            <li><strong>地点:</strong>人民大会堂三楼金色大厅</li>
+         </ul>
+         <p style="width:300px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3月17日，国务院总理李克强和副总理张高丽、刘延东、汪洋、马凯在北京人民大会堂与中外记者见面，并回答记者提问。</p>
+         <p style="width:300px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;右边的图为网友对总理的回答做出的评论，随着时间的变化，评论的主要内容也在发生变化。</p>
+         <img src="img/MAIN201303171045000293555561836.jpg" style="width:300px" >
+		</div>
+	</div>
+    
+</div>
+<div class="container">
+<div class="time">
+	<span><strong>10:30</strong></span><span>10:40</span><span>10:50</span><span><strong>11:00</strong></span><span>11:10</span><span>11:20</span><span>11:20</span><span>11:30</span><span>11:40</span><span>11:50</span><span><strong>12:00</strong></span><span>12:10</span><span>12:20</span><span><strong>12:30</strong></span>
+</div>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-info" id="pro" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+    <span style="float:right">now</span>
+  </div>
+  </div>
+</div>
+
+
+
+<script src="js/d3.v3.min.js"></script>
+<script>
+
+var diameter = 500,
+    format = d3.format(",d");
+	
+var color = d3.scale.category20c();
+
+var pack = d3.layout.pack()
+    .size([diameter+100, diameter ])
+	.sort(null)
+	.padding(1.5)
+    .value(function(d) { return d.size; });
+
+var svg = d3.select(".span6").append("svg")
+    .attr("width", diameter+100-4)
+    .attr("height", diameter-4)
+  .append("g")
+    .attr("transform", "translate(2,2)");
+	
+var dataset =[ 
+	{"children":[
+				{"name":"总理","size":81}
+	]},
+	{"children":[
+				{"name":"威武","size":81},
+				{"name":"国旗","size":40},
+				{"name":"有磁性","size":29},
+				{"name":"新迹象","size":33},
+				{"name":"给力","size":33},
+				{"name":"围观","size":61},
+				{"name":"期待","size":33}
+	]},
+	{"children":[
+				{"name":"威武","size":96},
+				{"name":"给力","size":89},
+				{"name":"爱你","size":81},
+				{"name":"通俗易懂","size":80},
+				{"name":"好样的","size":76},
+				{"name":"才气","size":65},
+				{"name":"魄力","size":65},
+				{"name":"重任","size":62},
+				{"name":"名声","size":40},
+				{"name":"决心","size":29},
+				{"name":"强大","size":19},
+				{"name":"不错","size":17},
+				{"name":"责任","size":10}
+	]},
+	{"children":[
+				{"name":"威武","size":95},
+				{"name":"人民","size":91},
+				{"name":"政府","size":90},
+				{"name":"实事","size":86},
+				{"name":"慈祥","size":75},
+				{"name":"期待","size":68},
+				{"name":"说到做到","size":58},
+				{"name":"好样","size":56},
+				{"name":"魄力","size":56},
+				{"name":"刚柔相济","size":53},
+				{"name":"激动","size":52},
+				{"name":"不错","size":47},
+				{"name":"力量","size":36},
+				{"name":"兄弟","size":34},
+				{"name":"目标","size":33}
+				]},
+	{"children":[{"name":"威武","size":97},
+				{"name":"给力","size":95},
+				{"name":"好","size":88},
+				{"name":"风趣","size":85},
+				{"name":"不错","size":80},
+				{"name":"高手","size":77},
+				{"name":"智慧","size":69},
+				{"name":"务实","size":61},
+				{"name":"有魄力","size":60},
+				{"name":"很赞","size":58},
+				{"name":"好呀","size":54},
+				{"name":"新时代","size":45},
+				{"name":"掌声","size":34},
+				{"name":"秩序","size":21},
+				{"name":"决心","size":20}
+]},
+		{"children":[{"name":"魄力","size":98},
+				{"name":"新气象","size":97},
+				{"name":"得体","size":94},
+				{"name":"给力","size":91},
+				{"name":"支持","size":81},
+				{"name":"大气","size":78},
+				{"name":"实在","size":73},
+				{"name":"帅气","size":67},
+				{"name":"好评","size":60},
+				{"name":"学历","size":59},
+				{"name":"印象","size":59},
+				{"name":"形象","size":50},
+				{"name":"不错","size":49},
+				{"name":"智慧","size":32},
+				{"name":"霸气","size":21}
+]},
+		{"children":[{"name":"实话","size":86},
+				{"name":"鲜花","size":84},
+				{"name":"好样","size":80},
+				{"name":"威武","size":73},
+				{"name":"幽默感","size":70},
+				{"name":"功底","size":68},
+				{"name":"真切","size":65},
+				{"name":"风度","size":59},
+				{"name":"帅气","size":58},
+				{"name":"住房","size":58},
+				{"name":"最强","size":52},
+				{"name":"决心","size":46},
+				{"name":"有用","size":37},
+				{"name":"不错","size":33},
+				{"name":"智慧","size":28},
+				{"name":"爱你","size":17}
+]},
+		{"children":[{"name":"威武","size":99},
+				{"name":"鼓掌","size":88},
+				{"name":"酷","size":85},
+				{"name":"幽默","size":82},
+				{"name":"国旗","size":78},
+				{"name":"机会","size":75},
+				{"name":"公仆","size":74},
+				{"name":"民心","size":70},
+				{"name":"甘露","size":61},
+				{"name":"真心话","size":54},
+				{"name":"风范","size":54},
+				{"name":"榜样","size":52},
+				{"name":"学子","size":40},
+				{"name":"大国","size":36},
+				{"name":"实话","size":34},
+				{"name":"信心","size":28},
+				{"name":"不错","size":26},
+				{"name":"爱你","size":17}
+]},
+		{"children":[{"name":"威武","size":99},
+				{"name":"民生","size":94},
+				{"name":"爱你","size":93},
+				{"name":"榜样","size":90},
+				{"name":"赞","size":87},
+				{"name":"希望","size":80},
+				{"name":"硬气","size":73},
+				{"name":"厚望","size":72},
+				{"name":"内行","size":69},
+				{"name":"新气象","size":64},
+				{"name":"魄力","size":44},
+				{"name":"实事","size":44},
+				{"name":"修养","size":40},
+				{"name":"大气","size":39},
+				{"name":"笑容","size":37},
+				{"name":"能力","size":23},
+				{"name":"美丽","size":21},
+				{"name":"厉害","size":21}
+]},
+		{"children":[{"name":"威武","size":96},
+				{"name":"铁面","size":95},
+				{"name":"人才","size":90},
+				{"name":"精彩","size":88},
+				{"name":"铁腕","size":83},
+				{"name":"好样","size":81},
+				{"name":"淡定","size":67},
+				{"name":"慈祥","size":67},
+				{"name":"过硬","size":67},
+				{"name":"支持","size":66},
+				{"name":"鼓掌","size":59},
+				{"name":"真心","size":56},
+				{"name":"能力","size":50},
+				{"name":"全新","size":31},
+				{"name":"爱你","size":21},
+				{"name":"期待","size":19},
+				{"name":"好运","size":13}
+]},
+		{"children":[{"name":"威武","size":87},
+				{"name":"魄力","size":86},
+				{"name":"正义","size":80},
+				{"name":"大道","size":74},
+				{"name":"灵魂","size":71},
+				{"name":"天下","size":60},
+				{"name":"有水平","size":44},
+				{"name":"希望","size":33}
+]},
+		{"children":[{"name":"威武","size":82},
+				{"name":"信心","size":56},
+				{"name":"给力","size":50},
+				{"name":"机会","size":42},
+				{"name":"人民","size":30}
+]},
+		{"children":[{"name":"可爱","size":86},
+				{"name":"威武","size":81},
+				{"name":"重托","size":43},
+				{"name":"给力","size":30},
+				{"name":"真心","size":22}
+]},
+		{"children":[{"name":"威武","size":79},
+				{"name":"嗓子","size":76},
+				{"name":"膀子","size":49},
+				{"name":"本事","size":47},
+				{"name":"爱你","size":28}
+]}
+	]
+
+var node = svg.selectAll(".node")
+      .data(pack.nodes(dataset[0]).filter(function(d) { return !d.children; }))
+    .enter().append("g")
+      .attr("class", function(d) { return "node" ; })
+	  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+	node.append("title")
+			  .text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });
+			  
+	node.append("circle")
+			  .attr("r", function(d) { return d.r; })
+			  .style("fill",function(d){return color(d.size);});
+
+	node.filter(function(d) { return !d.children; }).append("text")
+			  .attr("dy", ".3em")
+			  .style("text-anchor", "middle")
+			  .style("font-size",function(d){return d.size/3})
+			  .style("fill","black")
+			  .text(function(d) { return d.name.substring(0, d.r / 2); });
+
+
+d3.select(self.frameElement).style("height", diameter + "px");
+
+function reDraw(i){
+	
+		var node = svg.selectAll(".node")
+			  .data(pack.nodes(dataset[i]).filter(function(d) { return !d.children; }));
+		
+		//enter,append——增加
+		node.enter().append("g")
+		.attr("class", "node" );
+		
+		//remove exit——减少
+		var exNode = node.exit();
+		
+		exNode.select("circle")
+			  .transition()
+			  .duration(3000)
+			  .attr("r", 0);	
+			  
+		exNode.select("text")
+		 	  .transition()
+			  .duration(2000)
+			  .style("font-size",0);	
+			  
+		exNode.transition().duration(3000).remove();
+		
+		node.append("title");
+
+		node.append("circle");
+
+		node.filter(function(d) { return !d.children; }).append("text");
+		
+		//updating~
+		node.transition()
+		.duration(3000)
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		 		
+		node.select("title")
+			  .transition()
+			  .duration(3000)
+			  .text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });
+		
+		node.select("circle")
+			  .transition()
+			  .duration(3000)
+			  .attr("r", function(d) { return d.r; })
+			  .style("fill",function(d){return color(d.size);});
+		
+		node.select("text")
+		 	  .transition()
+			  .duration(2500)
+			  .delay(500)
+			  .attr("dy", ".3em")
+			  .style("text-anchor", "middle")
+			  .style("font-size",function(d){return d.size/3})
+			  .style("fill","black")
+			  .text(function(d) { return d.name.substring(0, d.r / 2); });
+			  
+		d3.select("#pro")
+		.transition()
+		.duration(3000)
+		.style("width",(i)*910/13+"px" );
+			  
+}
+
+var i = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+
+    setInterval(function(){
+		console.log(i)
+		//--svg.selectAll(".node").remove();
+        reDraw(i[0]);
+		i.push(i.shift());
+    },4000)
+
+
+
+
+</script>
